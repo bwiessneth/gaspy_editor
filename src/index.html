@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'">
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="codemirror.css">
+    <link rel="stylesheet" href="index.css">
+    <title>GASM</title>
+  </head>
+  <body>
+    <div class="content">
+        <div class="split a" id="editor">
+          <textarea id="sourceeditor"></textarea>          
+        </div>
+        <div class="split b" id="log">
+          <textarea id="logeditor" readonly></textarea>
+        </div>
+    </div>
+
+    <!-- Codemirror -->
+    <script src="codemirror.js"></script>
+    <script src="gasm.js"></script>
+
+    <!-- index.js -->
+    <script src="index.js"></script>
+  </body>
+</html>
+
+

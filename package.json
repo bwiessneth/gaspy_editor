@@ -1,0 +1,31 @@
+{
+  "name": "gasm-electron",
+  "version": "0.1.0",
+  "description": "Gumnut Assembler",
+  "main": "main.js",
+  "scripts": {
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "repository": "",
+  "author": "Benjamin Wiessneth",
+  "license": "MIT",
+  "devDependencies": {
+    "devtron": "^1.4.0",
+    "electron-builder": "^22.7.0",
+    "electron": "^3.1.13",    
+    "standard": "^12.0.1"
+  },
+  "dependencies": {
+    "bootstrap": "^4.5.0",
+    "electron-reload": "^1.2.5",
+    "electron-store": "^2.0.0",
+    "jquery": "^3.5.1",
+    "popper.js": "^1.16.1",
+    "python-shell": "^2.0.1",
+    "split.js": "^1.6.2"
+  },
+  "build": {
+    "appId": "space.uber.bewi.gasm-electron"
+  }
+}

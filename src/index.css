@@ -1,0 +1,50 @@
+body, html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#editor {  }
+
+#log {
+	overflow: hidden;
+}
+
+#logeditor {
+	width: 100%;	
+	height: 100%;	
+	font-family: Monospace;
+	resize: none;
+	border: none
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-items: center;
+  align-items: center;
+}
+
+.split {
+  width:100%;
+  height:100%;
+}
+
+.gutter {
+  cursor: s-resize;
+  width: 100%;
+  background: grey;
+}
+
+.hidden {
+  width: 100%;
+  height: 0;
+}
