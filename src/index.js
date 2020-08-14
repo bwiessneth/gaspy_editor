@@ -5,7 +5,6 @@ const dialog = remote.dialog
 const fs = require('fs');
 const path = require('path');
 const child_process = require('child_process')
-const { PythonShell } = require('python-shell')
 const Split = require('split.js')
 require('popper.js');
 require('bootstrap');
