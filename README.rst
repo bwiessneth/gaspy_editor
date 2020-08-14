@@ -1,12 +1,12 @@
 gaspy-editor
 ============
 
-Editor for gaspy (Gumnut Assembler written in Python).
+Editor for gaspy (Gumnut Assembler written in Python). *gaspy-editor* is based editor implementation using *electron* and *JavaScript*.
 
-*gaspy-editor* is based editor implementation using *electron* and *JavaScript*.
-
-It's my first *electron* project, so please be gentle.
-
+.. image:: docs/screenshot.png
+  :width: 400
+  :alt: Screenshot of editor window
+  
 
 
 Requirements
