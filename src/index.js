@@ -4,12 +4,11 @@ const { ipcRenderer, remote } = require('electron')
 const dialog = remote.dialog 
 const fs = require('fs');
 const path = require('path');
+const child_process = require('child_process')
 const { PythonShell } = require('python-shell')
 const Split = require('split.js')
 require('popper.js');
 require('bootstrap');
-// const $ = require('jquery');
-// window.$ = window.jQuery = require('jquery');
 
 
 const sourceFile = {}
@@ -44,26 +43,26 @@ ipcRenderer.on('onOpen', (event, arg) => {
 
 	dialog.showOpenDialog((fileNames) => {
 
-	    if(fileNames === undefined){
-	    	console.log("No file selected");
-	    	return;
-	    }
+		if(fileNames === undefined){
+			console.log("No file selected");
+			return;
+		}
 
-	    fs.readFile(fileNames[0], 'utf-8', (err, data) => {
-	    	if(err){
-	    		alert("An error ocurred reading the file :" + err.message);
-	    		return;
-	    	}
+		fs.readFile(fileNames[0], 'utf-8', (err, data) => {
+			if(err){
+				alert("An error ocurred reading the file :" + err.message);
+				return;
+			}
 
-	    	sourceFile.content = data;
-	    	sourceFile.filepath = fileNames[0]
-	    	sourceFile.filename = path.parse(sourceFile.filepath).base;
-	    	sourceFile.dir = path.parse(sourceFile.filepath).dir;
-	    	myCodeMirror.setValue(sourceFile.content);
-	    	myCodeMirror.refresh();
+			sourceFile.content = data;
+			sourceFile.filepath = fileNames[0]
+			sourceFile.filename = path.parse(sourceFile.filepath).base;
+			sourceFile.dir = path.parse(sourceFile.filepath).dir;
+			myCodeMirror.setValue(sourceFile.content);
+			myCodeMirror.refresh();
 
-	    	ipcRenderer.send('title:change', sourceFile.filename);
-	    });
+			ipcRenderer.send('title:change', sourceFile.filename);
+		});
 	});
 })
 
@@ -116,31 +115,23 @@ ipcRenderer.on('onSaveAs', (event, arg) => {
 
 ipcRenderer.on('onBuild', (event, arg) => {
 	console.log('onBuild')
-	log_clear();
+	log("\n");
 
 	// Show log pane by resizing it to 25% height	
 	splitView.setSizes([75, 25])
 
-	var gass_options = {
-		mode: 'text',
-		// pythonPath: 'path/to/python',
-		pythonOptions: ['-u'],
-		scriptPath: 'gumnut_simulator\\GumnutSimulator\\',
-		args: [sourceFile.filepath, "-o", sourceFile.dir]
-		// args: ['-h']
-	};
-
-	console.log({gass_options})
-
-	PythonShell.run('GumnutAssembler.py', gass_options, function (err, results) {
-		if (err) {
-			log(err.message);
-		}
-		// results is an array consisting of messages collected during execution
-		if (results) {
-			log(results.join('\n'));
+	var	exec_proc = child_process.exec('gaspy ' + sourceFile.filepath + " -o " + sourceFile.dir, (error, stdout, stderr, exitCode) => {		
+		if (error === null) {
+			console.log("Build complete!")
+			log("Build complete!\n")
+		} else {
+			console.log("Build failed!")
+			console.log(stderr)
+			log("Build failed!\n")
+			log(stderr)
 		}
 	});
+
 })
 
 function log(text) {
@@ -151,21 +142,86 @@ function log_clear(text) {
 	document.getElementById("logeditor").value = '';
 }
 
-ipcRenderer.on('onLog', (event, arg) => {
-	log(arg);
-})
-
 const splitView = Split(['.a', '.b'], {
-    gutterSize: 3,
-    direction: "vertical",
-    sizes: [100, 0],
-    minSize: 0,
-    snapOffset: 1,
+	gutterSize: 3,
+	direction: "vertical",
+	sizes: [100, 0],
+	minSize: 0,
+	snapOffset: 1,
+	onDragEnd: myCodeMirror.refresh()
 });
 
 
 document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' || event.keyCode === 27) {
-        splitView.setSizes([100, 0])
-    }
+	if (event.key === 'Escape' || event.keyCode === 27) {
+		hide_log();
+	}
 });
+
+function show_log() {
+	splitView.setSizes([75, 25])
+	myCodeMirror.refresh()
+}
+
+function hide_log() {
+	splitView.setSizes([100, 0])
+	myCodeMirror.refresh()
+}
+
+function check_gaspy_installation() {
+	child_process.exec('gaspy --version', (error, stdout, stderr) => {
+		if ((error === null) && (stderr === "")) {
+			var prog_version = stdout.match(/gaspy (\d+).(\d+).(\d+)/);
+			if (prog_version.length == 4) {
+				var prog_version_major = prog_version[1];
+				var prog_version_minor = prog_version[2];
+				var prog_version_patch = prog_version[3];
+
+				if ((prog_version_major == 1) && (prog_version_minor >= 0) && (prog_version_patch >= 1)) {
+					console.log("Found dependency: " + stdout);
+					log("Found dependency: " + stdout);
+					return prog_version
+				} else {
+					console.log("Found dependency not installed: gaspy version >= 1.0.1");
+					log("Found dependency not installed: gaspy version >= 1.0.1\n");
+					show_log();
+				}
+			}
+		} else {
+			console.log("Found dependency not installed: gaspy version >= 1.0.1");
+			log("Found dependency not installed: gaspy version >= 1.0.1\n");
+			show_log();
+		}
+	});
+}
+
+
+function check_python_installation() {
+	child_process.exec('python --version', (error, stdout, stderr) => {
+		if ((error === null) && (stderr === "")) {
+			var prog_version = stdout.match(/Python (\d+).(\d+).(\d+)/);
+			if (prog_version.length == 4) {
+				var prog_version_major = prog_version[1];
+				var prog_version_minor = prog_version[2];
+				var prog_version_patch = prog_version[3];
+
+				if ((prog_version_major == 3) && (prog_version_minor >= 5)) {
+					console.log("Found dependency: " + stdout);
+					log("Found dependency: " + stdout);
+					return prog_version
+				} else {
+					console.log("Found dependency not installed: python version >= 3.5.0");
+					log("Found dependency not installed: python version >= 3.5.0\n");
+					show_log();
+				}
+			}
+		} else {
+			console.log("Found dependency not installed: python version >= 3.5.0");
+			log("Found dependency not installed: python version >= 3.5.0\n");
+			show_log();
+		}
+	});
+}
+
+const py_version = check_python_installation()
+const gaspy_version = check_gaspy_installation()
