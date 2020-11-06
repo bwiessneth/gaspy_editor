@@ -17,7 +17,7 @@ function createWindow () {
 	mainWindow.loadFile(path.join('src', 'index.html'))
 
 	// Open the DevTools.
-	mainWindow.webContents.openDevTools()
+	// mainWindow.webContents.openDevTools()
 
     // Gracefully show when ready
 	mainWindow.once('ready-to-show', () => {
@@ -52,9 +52,9 @@ app.on('window-all-closed', function () {
 
 ipcMain.on('title:change', (event, title) => {
 	if (title === '') {
-		mainWindow.setTitle('GASM');
+		mainWindow.setTitle('gumnut-assembler-editor');
 	} else {
-		mainWindow.setTitle('GASM - ' + title);
+		mainWindow.setTitle('gumnut-assembler-editor - ' + title);
 	}
 })
 
