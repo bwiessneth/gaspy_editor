@@ -119,7 +119,7 @@ ipcRenderer.on('onBuild', (event, arg) => {
 	// Show log pane by resizing it to 25% height	
 	splitView.setSizes([75, 25])
 
-	var	exec_proc = child_process.exec('gaspy ' + sourceFile.filepath + " -o " + sourceFile.dir, (error, stdout, stderr, exitCode) => {		
+	var	exec_proc = child_process.exec('gumnut_assembler ' + sourceFile.filepath + " -o " + sourceFile.dir, (error, stdout, stderr, exitCode) => {		
 		if (error === null) {
 			console.log("Build complete!")
 			log("Build complete!\n")
@@ -167,28 +167,28 @@ function hide_log() {
 	myCodeMirror.refresh()
 }
 
-function check_gaspy_installation() {
-	child_process.exec('gaspy --version', (error, stdout, stderr) => {
+function check_gumnut_assembler_installation() {
+	child_process.exec('gumnut_assembler --version', (error, stdout, stderr) => {
 		if ((error === null) && (stderr === "")) {
-			var prog_version = stdout.match(/gaspy (\d+).(\d+).(\d+)/);
+			var prog_version = stdout.match(/gumnut_assembler (\d+).(\d+).(\d+)/);
 			if (prog_version.length == 4) {
 				var prog_version_major = prog_version[1];
 				var prog_version_minor = prog_version[2];
 				var prog_version_patch = prog_version[3];
 
-				if ((prog_version_major == 1) && (prog_version_minor >= 0) && (prog_version_patch >= 1)) {
+				if ((prog_version_major >= 1) && (prog_version_minor >= 0) && (prog_version_patch >= 0)) {
 					console.log("Found dependency: " + stdout);
 					log("Found dependency: " + stdout);
 					return prog_version
 				} else {
-					console.log("Found dependency not installed: gaspy version >= 1.0.1");
-					log("Found dependency not installed: gaspy version >= 1.0.1\n");
+					console.log("Found dependency not installed: gumnut-assembler version >= 1.0.1");
+					log("Found dependency not installed: gumnut-assembler version >= 1.0.1\n");
 					show_log();
 				}
 			}
 		} else {
-			console.log("Found dependency not installed: gaspy version >= 1.0.1");
-			log("Found dependency not installed: gaspy version >= 1.0.1\n");
+			console.log("Found dependency not installed: gumnut-assembler version >= 1.0.1");
+			log("Found dependency not installed: gumnut-assembler version >= 1.0.1\n");
 			show_log();
 		}
 	});
@@ -223,4 +223,4 @@ function check_python_installation() {
 }
 
 const py_version = check_python_installation()
-const gaspy_version = check_gaspy_installation()
+const gumnut_assembler_version = check_gumnut_assembler_installation()
