@@ -1,7 +1,7 @@
 gumnut-assembler-editor
 #######################
 
-Editor for gumnut-assembler (Gumnut Assembler written in Python) using *Electron*.
+Editor for `gumnut-assembler <https://github.com/bwiessneth/gumnut-assembler>`__ using *Electron*.
 
 .. image:: docs/screenshot.png
   :width: 400
