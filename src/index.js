@@ -40,21 +40,11 @@ ipcRenderer.on('onNew', (event, arg) => {
 ipcRenderer.on('onOpen', (event, arg) => {
 	console.log('onOpen')
 
-	dialog.showOpenDialog((fileNames) => {
-
-		if(fileNames === undefined){
-			console.log("No file selected");
-			return;
-		}
-
-		fs.readFile(fileNames[0], 'utf-8', (err, data) => {
-			if(err){
-				alert("An error ocurred reading the file :" + err.message);
-				return;
-			}
-
-			sourceFile.content = data;
-			sourceFile.filepath = fileNames[0]
+	dialog.showOpenDialog((data) => {})
+	.then((data) => {
+		fs.readFile(data.filePaths[0], 'utf-8', (err, fdata) => {
+			sourceFile.content = fdata;
+			sourceFile.filepath = data.filePaths[0]
 			sourceFile.filename = path.parse(sourceFile.filepath).base;
 			sourceFile.dir = path.parse(sourceFile.filepath).dir;
 			myCodeMirror.setValue(sourceFile.content);
@@ -74,16 +64,11 @@ ipcRenderer.on('onSave', (event, arg) => {
 	if (sourceFile.filepath) {
 		filepath = sourceFile.filepath;
 	} else {
-		console.log('No filepath set, opening dialog')
-		filepath = dialog.showSaveDialog({});
+		filepath = dialog.showSaveDialogSync({});
 	}
 
 	sourceFile.content = myCodeMirror.getValue();
 	fs.writeFile(filepath, sourceFile.content, function(err) {
-		if(err){
-			alert("An error ocurred saving the file :" + err.message);
-			return;
-		}		
 		sourceFile.filepath = filepath;
 		sourceFile.filename = path.parse(sourceFile.filepath).base;
 		sourceFile.dir = path.parse(sourceFile.filepath).dir;
@@ -96,14 +81,10 @@ ipcRenderer.on('onSaveAs', (event, arg) => {
 	console.log('onSaveAs')
 
 	var filepath;
-	filepath = dialog.showSaveDialog({});
+	filepath = dialog.showSaveDialogSync({});
 
 	sourceFile.content = myCodeMirror.getValue();
 	fs.writeFile(filepath, sourceFile.content, function(err) {
-		if(err){
-			alert("An error ocurred saving the file :" + err.message);
-			return;
-		}
 		sourceFile.filepath = filepath;
 		sourceFile.filename = path.parse(sourceFile.filepath).base;
 		sourceFile.dir = path.parse(sourceFile.filepath).dir;
