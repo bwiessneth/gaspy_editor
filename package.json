@@ -1,7 +1,7 @@
 {
-  "name": "gaspy-editor",
+  "name": "gumnut-assembler-editor",
   "version": "0.0.1",
-  "description": "Editor for gaspy",
+  "description": "Editor for gumnut-assembler",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -25,6 +25,6 @@
     "split.js": "^1.6.2"
   },
   "build": {
-    "appId": "space.uber.bewi.gaspy-editor"
+    "appId": "space.uber.bewi.gumnut-assembler-editor"
   }
 }
